@@ -4,7 +4,10 @@ moeda_diferente([A,B,C,D,E,F,G,H,I,J,M,N], P, Z) :-
 	V =:= S -> iguais([A,B,C,I,J,M,N], Q, Z), posicao(Q, [A,B,C,D,E,F,G,H,I,J,M,N], P); tchau([]),
 	soma([A,B,C,D], S),
 	soma([E,F,G,H], V),
-	S < V -> naoiguais([A,B,C,D,E,F,G,H,I,J,M], P, Z).
+	V > S -> naoiguais([A,B,C,D,E,F,G,H,J], Q, Z), posicao(Q, [A,B,C,D,E,F,G,H,I,J,M,N], P); tchau([]),
+	soma([A,B,C,D], S),
+	soma([E,F,G,H], V),
+	S > V -> naoiguais([E,F,G,H,A,B,C,D,J], Q, Z), posicao(Q, [A,B,C,D,E,F,G,H,I,J,M,N], P).
 
 iguais([A,B,C,I,J,M,N], P, Z) :-
 	soma([A,B,C], S),
@@ -17,10 +20,25 @@ iguais([A,B,C,I,J,M,N], P, Z) :-
 	soma([I,J,M], V),
 	V < S -> leve(I,J,M,P,Z).
 
-naoiguais([A,B,C,D,E,F,G,H,I,J,M], P, Z) :-
-	soma([A,B,C,E], S),
-	soma([F,I,J,M], V),
-	S =:= V -> iguaisiguais(G,H,D,P,Z).
+naoiguais([A,B,C,D,E,F,G,H,J], P, Z) :-
+	soma([A,B,E], S),
+	soma([C,F,J], V),
+	S =:= V -> iguaisiguais(G,H,D,P,Z); tchau([]),
+	soma([A,B,E], S),
+	soma([C,F,J], V),
+	V > S -> levepesado(A,B,F,P,Z); tchau([]),
+	soma([A,B,E], S),
+	soma([C,F,J], V),
+	S > V -> pesadoleve(C,J,E,P,Z).
+
+pesadoleve(C,J,E,P,Z) :-
+	C =:= J -> P is E, Z = 'Mais pesada ?yes'; tchau([]),
+	J > C -> P is C, Z = 'Mais pesada ?no'.
+
+levepesado(A,B,F,P,Z) :-
+	A =:= B -> P is F, Z = 'Mais pesada ?yes'; tchau([]),
+	A > B -> P is B, Z = 'Mais pesada ?no'; tchau([]),
+	B > A -> P is A, Z = 'Mais pesada ?no'. 
 
 iguaisiguais(G,H,D,P,Z) :-
 	G =:= H -> P is D, Z = 'Mais pesada ?no'; tchau([]),
